@@ -24,6 +24,7 @@ func BenchmarkMultiRoutine(b *testing.B) {
 	MAX := runtime.GOMAXPROCS(0) * 2
 	var wg sync.WaitGroup
 	wg.Add(MAX)
+	b.ResetTimer()
 
 	for i := 0; i < MAX; i++ {
 		go func() {
@@ -45,6 +46,7 @@ func BenchmarkMultiRoutine(b *testing.B) {
 
 func Benchmark75PercentWrite(b *testing.B) {
 	c := New(b.N / 4)
+	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
 		n := i
@@ -60,6 +62,7 @@ func Benchmark75PercentWrite(b *testing.B) {
 
 func BenchmarkNoHitNoWrite(b *testing.B) {
 	c := New(b.N / 4)
+	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
 		n := i
@@ -73,6 +76,7 @@ func BenchmarkNoHitNoWrite(b *testing.B) {
 func BenchmarkAllHit(b *testing.B) {
 	c := New(b.N / 4)
 	c.Store(1, 1)
+	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
 		_, _ = c.Load(1)

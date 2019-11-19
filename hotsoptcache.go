@@ -1,3 +1,8 @@
+// Package hotspotcache stores values like sync.Map does.
+// Meanwhile, it handles a aging queue: every access to a existing object in the cache,
+// it will be lifted up to he top of the queue and marked as the newest element. When
+// the size in cache exceeds preset limit size, the bottom elements of the queue would
+// be removed.
 package hotspotcache
 
 import (
@@ -8,7 +13,7 @@ import (
 	"sync"
 )
 
-// Cache is the hotspot cache object
+// Cache is the hotspot cache object.
 type Cache struct {
 	c *cache
 }
@@ -22,7 +27,7 @@ type cache struct {
 	stop      chan bool
 }
 
-// New returns a initialized hotspot cache
+// New returns a initialized cache with given size. When size of the cache exceeds maxSize, it will start cleaning.
 func New(maxSize int) *Cache {
 	if maxSize <= 0 {
 		maxSize = 10240
@@ -37,7 +42,7 @@ func New(maxSize int) *Cache {
 	return &ret
 }
 
-// Load read a value in the cache. If value does not exist in cache, the return exist will be false, otherwise true. If value exists, its hotspot will also be set to the top.
+// Load read a value in the cache. If value does not exist in cache, the return exist will be false, otherwise true. If value exists, its hotspot will also be risen to the top.
 func (c *Cache) Load(key interface{}) (value interface{}, exist bool) {
 	value, exist = c.c.values.Load(key)
 	if exist {
@@ -48,7 +53,7 @@ func (c *Cache) Load(key interface{}) (value interface{}, exist bool) {
 	return
 }
 
-// Store saves a value in corresponding key.
+// Store saves a value by corresponding key.
 func (c *Cache) Store(key, value interface{}) {
 	c.c.values.Store(key, value)
 	c.c.access <- key

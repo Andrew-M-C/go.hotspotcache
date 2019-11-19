@@ -1,0 +1,20 @@
+language: go
+
+go:
+  - 1.11
+  - 1.12
+  - 1.13
+
+install:
+  - go get github.com/mattn/goveralls
+
+before_script:
+  # - go get github.com/buger/jsonparser
+
+script:
+  - go test -v -failfast -covermode=count -coverprofile=coverage.out && $HOME/gopath/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN
+
+env:
+  global:
+    - secure: "LeVwmvrUYAOGK/VXCZedVBXgSo8ZmbglYxbwuOcDvGav2PRzh65rwqa1DPrn1u9+3M9gNWZjiyob1iBk8U1bueN7xw/c3hqgZRZ+DhEVhgjpwypbG/bX+fCmBCoyrOx7shj+NBU9vLj763HexGT0Mh25/KD8s6AKSb6LGI3RKoyW5SzxFFZXtqlq1P99qMhH6jxdB9ui/tph5GCw+ld6cqizw3nfNE7lXTj69FQ/vds5jHn4gAd4h/j1RQB1ZztajfYeVGUMq7wz94gBVN7WJlKbteKbdR2lfp9ThqMvDLJXv+yI4iknKk+062dr+n8LRKOkHSFUnIf3S/XSOYy8bJ0O7asAEQ+F5fwP61CTZTtuXBsWsqT/JAfQyWTr4d3Cl3X2MuprhqYe24hw7pnnC+rUF5gtwsxpPBl7YixUXP5FbbKHW3XcBSS28KfKUpLb2Q5aic/QdePXqEd5sVaV+UW9GYaloQlL2WIRXncBcuRJO4tHFRrT47MppDNQiCOYXjAwSnf8D2Q5zKdayALdJYXsFgUTikEC9a0v2KRqoNx4mOlQ7wT5WL6qjot76Qf7b37XiOABt/03tjCxxwc7Bqr7KZbCaEx8hBfY7eF9lw4/tTacYMT66dc1ibGwGIAGCDAxtXqoQwX70FmzBfAZHICSx8QCcHut+8SMWLU5078="
+    - GO111MODULE=on
